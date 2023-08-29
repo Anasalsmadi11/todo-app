@@ -3,7 +3,8 @@ import useForm from '../../hooks/form.jsx';
 import List from '../List/list.jsx';
 import { v4 as uuid } from 'uuid';
 import { SettingContext } from '../../context/Settings/settings.jsx';
-import { Pagination } from '@mantine/core';
+import PaginationSettings from '../pagination/pagination.jsx';
+// import { Pagination } from '@mantine/core';
 
 
  const ToDo = () => {
@@ -96,14 +97,20 @@ console.log( currentPage * settings.maxItemsPerPag)
          
          <List listData={paginatedList} toggleComplete={toggleComplete}/>
 
+        <PaginationSettings
+         currentPage={currentPage}
+         setCurrentPage={setCurrentPage}
+         itemsPerPage={settings.maxItemsPerPage}
+         total={10}
+        />
         
-          <Pagination
+          {/* <Pagination
             itemsPerPage={settings.maxItemsPerPage}
             total={10}
             page={currentPage}
             onChange={(newPage) => setCurrentPage(newPage)}
             withPagesCount
-          />
+          /> */}
         
       </div>
     </>
