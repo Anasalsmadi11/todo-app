@@ -8,6 +8,8 @@ import PaginationSettings from '../pagination/pagination.jsx';
 
 
  const ToDo = () => {
+
+
   const settings = useContext(SettingContext);
   const [defaultValues] = useState({
     difficulty: 4,
@@ -23,7 +25,15 @@ import PaginationSettings from '../pagination/pagination.jsx';
     item.complete = false;
     console.log(item);
     setList([...list, item]);
+
+    
   }
+
+  // const arr= JSON.stringify(list)
+  // // console.log("listData",arr)
+  // localStorage.setItem("listData", arr)
+
+
   function deleteItem(id) {
     const items = list.filter((item) => item.id !== id);
     setList(items);
@@ -37,6 +47,8 @@ import PaginationSettings from '../pagination/pagination.jsx';
     });
     setList(items);
   }
+
+  
   useEffect(() => {
     let incompleteCount = list.filter((item) => !item.complete).length;
     setIncomplete(incompleteCount);
@@ -44,7 +56,7 @@ import PaginationSettings from '../pagination/pagination.jsx';
   }, [list]);
 
 
-  const filteredList = settings.complete
+  const filteredList = !settings.complete
     ? list.filter((item) => !item.complete)
     : list;
     
@@ -52,8 +64,9 @@ import PaginationSettings from '../pagination/pagination.jsx';
     (currentPage - 1) * settings.maxItemsPerPage,
     currentPage * settings.maxItemsPerPage
   );
-console.log( (currentPage - 1) * settings.maxItemsPerPage)
-console.log( currentPage * settings.maxItemsPerPag)
+
+  // const one=localStorage.getItem("state")
+  // console.log("one",one)
 
   return (
     <>
@@ -95,7 +108,7 @@ console.log( currentPage * settings.maxItemsPerPag)
           </label>
         </form>
          
-         <List listData={paginatedList} toggleComplete={toggleComplete}/>
+         <List list={paginatedList} toggleComplete={toggleComplete}/>
 
         <PaginationSettings
          currentPage={currentPage}

@@ -1,16 +1,16 @@
 import React from "react";
-// import { useContext,useState } from "react";
-// import { SettingContext } from "../../context/Settings/settings";
-// import { Pagination } from '@mantine/core';
 
 export default function List(props){
-    // const settings = useContext(SettingContext)
-
-    // const [activePage, setPage] = useState(1);
   
+  const arr = JSON.parse(localStorage.getItem("listData"));
+
+
+    console.log("parsed",arr)
+ 
+
     return(
         <>
-        { props.listData.map(item => (
+        {props.list.map(item => (
             <div key={item.id}>
               <p>To do: {item.text}</p>
               <p><small>Assigned to: {item.assignee}</small></p>
