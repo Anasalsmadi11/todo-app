@@ -1,13 +1,16 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { SettingContext } from '../../context/Settings/settings'
 // import  { useState } from 'react';
 import { Form } from 'react-bootstrap';
 
 function UserSettings() {
 
+  // const[storedPref,setStoredPref]=useState([])
     const settings= useContext(SettingContext)
-
+console.log(settings)
    
+// const arr=JSON.parse(localStorage.getItem("state"))
+
 
 
 const handleToggleChange = () => {
@@ -47,6 +50,10 @@ const handleToggleChange = () => {
                 </div>
                 <input type='submit'/>
             </form>
+            <h3 style={{marginTop:"50px"}}>Updated settings:</h3>
+            <h4>{settings.complete ? "show completed TOdos":"hide Completed Todos"}</h4>
+            <h4>max items per page: {settings.maxItemsPerPage}</h4>
+            
     </div>
   )
 }
