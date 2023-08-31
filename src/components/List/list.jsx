@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SettingContext } from "../../context/Settings/settings";
 
 export default function List(props){
-  
-  const arr = JSON.parse(localStorage.getItem("listData"));
+  // const settings= useContext(SettingContext)
+  // const arr = JSON.parse(localStorage.getItem("listData"));
 
 
-    console.log("parsed",arr)
+    // console.log("parsed",arr)
  
 
     return(
