@@ -1,18 +1,15 @@
 import React, { useContext, useState } from 'react'
 import { SettingContext } from '../../context/Settings/settings'
-// import  { useState } from 'react';
 import { Form } from 'react-bootstrap';
+import {When} from 'react-if';
+import {LoginContext} from '../auth/context'
 
 function UserSettings() {
 
-  // const[storedPref,setStoredPref]=useState([])
+    const login= useContext(LoginContext)
     const settings= useContext(SettingContext)
 console.log(settings)
    
-// const arr=JSON.parse(localStorage.getItem("state"))
-
-
-
 const handleToggleChange = () => {
   settings.setComplete(!settings.complete);
 };
@@ -25,6 +22,8 @@ const handleToggleChange = () => {
     }
   return (
     <div>
+       <When condition={login.loggedIn}>
+
        
             <h2>the user settings</h2>
 
@@ -53,7 +52,7 @@ const handleToggleChange = () => {
             <h3 style={{marginTop:"50px"}}>Updated settings:</h3>
             <h4>{settings.complete ? "show completed TOdos":"hide Completed Todos"}</h4>
             <h4>max items per page: {settings.maxItemsPerPage}</h4>
-            
+            </When>
     </div>
   )
 }

@@ -4,8 +4,9 @@ import List from '../List/list.jsx';
 import { v4 as uuid } from 'uuid';
 import { SettingContext } from '../../context/Settings/settings.jsx';
 import PaginationSettings from '../pagination/pagination.jsx';
-// import { Pagination } from '@mantine/core';
 
+import {When} from 'react-if';
+import {LoginContext} from '../auth/context.jsx'
 
  const ToDo = () => {
 
@@ -20,6 +21,8 @@ import PaginationSettings from '../pagination/pagination.jsx';
   const [currentPage, setCurrentPage] = useState(1);
 
 // console.log(currentPage)
+
+const login= useContext(LoginContext)
 
     function addItem(item) {
     item.id = uuid();
@@ -85,7 +88,10 @@ useEffect(()=>{
     <>
     
       <div className="ToDo">
+        <When condition={login.loggedIn}> 
         <h1>To Do List: {incomplete} items pending</h1>
+
+       
         <form onSubmit={handleSubmit}>
           <h2>Add To Do Item</h2>
           <label>
@@ -121,7 +127,7 @@ useEffect(()=>{
             <button type="submit">Add Item</button>
           </label>
         </form>
-         
+        </When>
          <List list={paginatedList} toggleComplete={toggleComplete}/>
          {/* <List list={settings.todos} toggleComplete={toggleComplete}/> */}
 
