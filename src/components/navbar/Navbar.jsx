@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
+
+import Login from '../auth/login';
+import { When } from 'react-if';
+import LoginProvider from '../auth/context';
+import { LoginContext } from '../auth/context';
+
+
 export default function NavBar() {
+  const login= useContext(LoginContext)
   return (
     <>
                 <Navbar bg="dark" data-bs-theme="dark">
@@ -12,11 +20,21 @@ export default function NavBar() {
           <Nav className="me-auto">
                 <Link style={{ paddingRight: '15px' }} to="/">Home</Link>
                 <Link to="settings">settings</Link> {/* <Link> allow users to navigate between different routes within your application without a full page reload. */}
-            {/* <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/settings">Settings</Nav.Link> */} {/* <Nav.Link> with an href attribute triggers a full page reload when clicked, as it's a traditional anchor link. */}
-          </Nav>
+         
+         </Nav>
         </Container>
-      </Navbar>
+       
+           {/* <LoginProvider>
+
+           <When condition={true}>
+            <Login/>
+           </When>
+           </LoginProvider> */}
+       
+        </Navbar>
+       
+
+          
     </>
   )
 }
