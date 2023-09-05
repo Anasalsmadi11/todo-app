@@ -16,7 +16,7 @@ export default class App extends React.Component {
 
   static contextType = LoginContext;
   render() {
-    console.log(this.context)
+    // console.log(this.context)
     return (
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <Settings>

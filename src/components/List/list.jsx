@@ -14,8 +14,8 @@ export default function List(props){
       
         {props.list.map(item => (
             <div key={item.id}>
-              <p>To do: {item.text}</p>
-              <p><small>Assigned to: {item.assignee}</small></p>
+              <p>To do: {item.item}</p>
+              <p><small>Assigned to: {item.assignedTo}</small></p>
               <p><small>Difficulty: {item.difficulty}</small></p>
              <Auth capability="update">
               <div onClick={() => props.toggleComplete(item.id)}>Complete: {item.complete.toString()}</div>
