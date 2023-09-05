@@ -4,22 +4,26 @@ import List from '../List/list.jsx';
 import { v4 as uuid } from 'uuid';
 import { SettingContext } from '../../context/Settings/settings.jsx';
 import PaginationSettings from '../pagination/pagination.jsx';
-
 import {When} from 'react-if';
 import {LoginContext} from '../auth/context.jsx'
+import Auth from '../auth/auth.jsx';
+import "../../app.css"
 
- const ToDo = () => {
+const ToDo = () => {
 
 
   const settings = useContext(SettingContext);
   const [defaultValues] = useState({
     difficulty: 4,
   });
-  const [list, setList] = useState([]);
+  // const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [list, setList] = useState(() => {
+    const storedItems = localStorage.getItem("items");
+    return storedItems ? JSON.parse(storedItems) : [];
+  });
 // console.log(currentPage)
 
 const login= useContext(LoginContext)
@@ -27,25 +31,25 @@ const login= useContext(LoginContext)
     function addItem(item) {
     item.id = uuid();
     item.complete = false;
-    // console.log(item);
-    setList([...list, item]);
+    const updatedList = [...list, item];
+    setList(updatedList);
+    localStorage.setItem("items", JSON.stringify(updatedList));
 
-   settings.todos.push(item)
-    // console.log(settings.todos)
   }
 
-useEffect(()=>{
-  const arr= JSON.stringify(list)
-  // console.log("listData",arr)
-    localStorage.setItem("listData", arr)
-    console.log(settings)
-},[list])
+// useEffect(()=>{
+//   const arr= JSON.stringify(list)
+//     localStorage.setItem("listData", arr)
+//     console.log(settings)
+// },[list])
 
 
   function deleteItem(id) {
     const items = list.filter((item) => item.id !== id);
     setList(items);
+    localStorage.setItem("items", JSON.stringify(items));
   }
+
   function toggleComplete(id) {
     const items = list.map((item) => {
       if (item.id == id) {
@@ -54,6 +58,7 @@ useEffect(()=>{
       return item;
     });
     setList(items);
+    localStorage.setItem("items", JSON.stringify(items));
   }
 
   
@@ -64,13 +69,13 @@ useEffect(()=>{
   }, [list]);
 
 
-  const filteredList = !settings.complete
-    ? settings.todos.filter((item) => !item.complete)
-    : settings.todos;
+  // const filteredList = !settings.complete
+  //   ? settings.todos.filter((item) => !item.complete)
+  //   : settings.todos;
 
-  // const filteredList = settings.complete
-  //   ? list.filter((item) => !item.complete)
-  //   : list;
+  const filteredList = !settings.complete
+    ? list.filter((item) => !item.complete)
+    : list;
     
   const paginatedList = filteredList.slice(
     (currentPage - 1) * settings.maxItemsPerPage,
@@ -94,6 +99,7 @@ useEffect(()=>{
        
         <form onSubmit={handleSubmit}>
           <h2>Add To Do Item</h2>
+          <Auth capability="create" >
           <label>
             <span>To Do Item</span>
             <input
@@ -123,12 +129,14 @@ useEffect(()=>{
               name="difficulty"
             />
           </label>
+          {/* </Auth>
+          <Auth capability="create"> */}
           <label>
             <button type="submit">Add Item</button>
           </label>
+          </Auth>
         </form>
-        </When>
-         <List list={paginatedList} toggleComplete={toggleComplete}/>
+         <List deleteItem={deleteItem} list={paginatedList} toggleComplete={toggleComplete}/>
          {/* <List list={settings.todos} toggleComplete={toggleComplete}/> */}
 
         <PaginationSettings
@@ -136,15 +144,9 @@ useEffect(()=>{
          setCurrentPage={setCurrentPage}
          itemsPerPage={settings.maxItemsPerPage}
          total={filteredList.length}
-        />
+         />
+         </When>
         
-          {/* <Pagination
-            itemsPerPage={settings.maxItemsPerPage}
-            total={10}
-            page={currentPage}
-            onChange={(newPage) => setCurrentPage(newPage)}
-            withPagesCount
-          /> */}
         
       </div>
     </>
