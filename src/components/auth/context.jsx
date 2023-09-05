@@ -1,9 +1,11 @@
+import superagent  from 'superagent';
 import React from 'react';
 import {useEffect,useState} from 'react'
 import cookie from 'react-cookies';
 import jwt_decode from 'jwt-decode';
-
+import axios from 'axios';
 export const LoginContext = React.createContext();
+import base64 from 'base-64'
 
 const testUsers = {
   Administrator: {
@@ -29,38 +31,76 @@ const testUsers = {
 };
 
 const LoginProvider = (props) => {
-  const [state, setState] = useState({
-    loggedIn: false,
-    user: { capabilities: [] },
-    error: null,
-  });
+  
+    let  addItem= async(item)=>{
+    try{
+
+    const obj = {
+      item: item.text,
+      assignedTo: item.assignee,
+      difficulty:item.difficulty,
+      complete: item.complete,
+    };
+    const url=(`https://auth-api-33k1.onrender.com/api/v1/todo`)
+    await axios.post(url,obj)
+    // await axios.get(url)
+    .then((response)=>{
+      console.log(response.data)
+    })
+
+  }catch(error){
+
+    console.log(error `add  post ${error}`);
+  }
+  }
 
   const can = (capability) => {
     // return state.user.capabilities.includes(capability);
     return state?.user?.capabilities?.includes(capability);
   };
 
-  const login = async (username, password) => {
-    const auth = testUsers[username];
-    console.log("auth",auth)
-    if (auth && auth.password === password) {
-      try {
-        validateToken(auth.token);
-      } catch (e) {
-        setLoginState(false, null, {}, e);
-        console.error(e);
-      }
+  const login = async (username, password) => { 
+    try {
+      // console.log(state.user)
+      // console.log(user.token)
+      console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
+      const response = await superagent 
+      .post("https://auth-api-33k1.onrender.com/signin") 
+      .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
+      console.log("body>>>>>", response.body) 
+     
+        validateToken(response.body); 
+    } catch (err) {
+        console.log('///////')
     }
-  };
+}
+
+  // const login = async (username, password) => {
+
+  //   await axios.post(`https://auth-api-33k1.onrender.com/signin`)
+  
+  //   if (auth && auth.password === password) {
+  //     try {
+  //       validateToken(auth.token);
+  //     } catch (e) {
+  //       setLoginState(false, null, {}, e);
+  //       console.error(e);
+  //     }
+  //   }
+  // };
 
   const logout = () => {
     setLoginState(false, null, {});
   };
 
-  const validateToken = (token) => {
+
+  const validateToken = (user) => {
     try {
-      const validUser = jwt_decode(token);
-      setLoginState(true, token, validUser);
+      const validUser = jwt_decode(user.token);
+      setLoginState(true, user.token, validUser);
+
+      cookie.save("capabilities",user.user.capabilities)
+      
     } catch (e) {
       setLoginState(false, null, {}, e);
       console.log('Token Validation Error', e);
@@ -81,6 +121,14 @@ const LoginProvider = (props) => {
     validateToken(token);
   }, []);
 
+
+  const [state, setState] = useState({
+    loggedIn: false,
+    user: { capabilities: [] },
+    error: null,
+    addItem:addItem
+  });
+
   return (
     <LoginContext.Provider value={{ ...state, can, login, logout }}>
       {props.children}
@@ -97,7 +145,7 @@ export default LoginProvider;
 // +++++++++++++++++++++            ++++++++++++++++++++++
 // +++++++++++++++++++++            ++++++++++++++++++++++
 
- // function LoginProvider(props) {
+//  function LoginProvider(props) {
 //   const [loggedIn, setLoggedIn] = useState(false);
 //   const [user, setUser] = useState({ capabilities: [] });
 //   const [error, setError] = useState(null);
@@ -107,30 +155,36 @@ export default LoginProvider;
 //     return user?.capabilities?.includes(capability);
 //   };
 
-//   let login = async (username, password) => {
-//     let auth = testUsers[username];
-
-//     if (auth && auth.password === password) {
-//       try {
-//         validateToken(auth.token);
-//         console.log(auth.token);
-//       } catch (e) {
-//         setLoginState(false, null, {}, e);
-//         console.error(e);
-//       }
+//   const login = async (username, password) => { 
+//     try {
+//       // console.log(state.user)
+//       // console.log(user.token)
+//       console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
+//       const response = await superagent 
+//       .post("https://auth-api-33k1.onrender.com/signin") 
+//       .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
+//       console.log("body>>>>>", response.body) 
+//       setState({ ...state, loggedIn, , error: error || null })
+//         validateToken(response.body); 
+//     } catch (err) {
+//         console.log('///////')
 //     }
-//   };
+// }
 
 //   let logout = () => {
 //     setLoginState(false, null, {});
 //   };
-// let validateToken = (token) => {
+
+//   const validateToken = (user) => {
 //     try {
-//       let validUser = jwt_decode(token);
-//       setLoginState(true, token, validUser);
+//       const validUser = jwt_decode(user.token);
+//       setLoginState(true, user.token, validUser);
+
+//       cookie.save("capabilities",user.user.capabilities)
+      
 //     } catch (e) {
 //       setLoginState(false, null, {}, e);
-//       console.log("Token Validation Error", e);
+//       console.log('Token Validation Error', e);
 //     }
 //   };
 

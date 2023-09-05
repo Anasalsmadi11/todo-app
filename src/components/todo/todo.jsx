@@ -8,6 +8,7 @@ import {When} from 'react-if';
 import {LoginContext} from '../auth/context.jsx'
 import Auth from '../auth/auth.jsx';
 import "../../app.css"
+import axios from 'axios';
 
 const ToDo = () => {
 
@@ -16,25 +17,24 @@ const ToDo = () => {
   const [defaultValues] = useState({
     difficulty: 4,
   });
-  // const [list, setList] = useState([]);
+
   const [incomplete, setIncomplete] = useState([]);
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
   const [currentPage, setCurrentPage] = useState(1);
-  const [list, setList] = useState(() => {
-    const storedItems = localStorage.getItem("items");
-    return storedItems ? JSON.parse(storedItems) : [];
-  });
+  const [list, setList] = useState([]);
 // console.log(currentPage)
 
 const login= useContext(LoginContext)
 
-    function addItem(item) {
+
+     function addItem(item) {
     item.id = uuid();
     item.complete = false;
     const updatedList = [...list, item];
     setList(updatedList);
-    localStorage.setItem("items", JSON.stringify(updatedList));
-
+    // localStorage.setItem("items", JSON.stringify(updatedList));
+     login.addItem(item)
+     console.log(item)
   }
 
 // useEffect(()=>{
@@ -43,22 +43,48 @@ const login= useContext(LoginContext)
 //     console.log(settings)
 // },[list])
 
+useEffect(()=>{
+  const url=(`https://auth-api-33k1.onrender.com/api/v1/todo`)
 
-  function deleteItem(id) {
-    const items = list.filter((item) => item.id !== id);
-    setList(items);
-    localStorage.setItem("items", JSON.stringify(items));
+   axios.get(url)
+  .then((response)=>{
+
+    setList(response.data)
+  })
+})
+
+  async function deleteItem(id) {
+    
+    await axios.delete(`https://auth-api-33k1.onrender.com/api/v1/todo/${id}`)
+    
+    const url=(`https://auth-api-33k1.onrender.com/api/v1/todo`)
+   axios.get(url)
+  .then((response)=>{
+
+    setList(response.data)
+  })
   }
-
-  function toggleComplete(id) {
-    const items = list.map((item) => {
+   function toggleComplete(id) {
+      const items = list.map((item) => {
       if (item.id == id) {
         item.complete = !item.complete;
+      const url= `https://auth-api-33k1.onrender.com/api/v1/todo/${id}`  
+      axios.put(url,item).then((res)=>{
+        //either:
+        const dataArray = Object.values(res.data);
+        console.log(dataArray)
+        const newList = [...list, ...dataArray];
+        console.log(newList)
+        setList(newList);
+        //or:
+        // setList([res.data])
+      })
+        
       }
       return item;
     });
-    setList(items);
-    localStorage.setItem("items", JSON.stringify(items));
+    // setList(items);
+    // localStorage.setItem("items", JSON.stringify(items));
   }
 
   
@@ -81,8 +107,8 @@ const login= useContext(LoginContext)
     (currentPage - 1) * settings.maxItemsPerPage,
     currentPage * settings.maxItemsPerPage
   );
-  console.log((currentPage - 1) * settings.maxItemsPerPage)
-  console.log(  currentPage * settings.maxItemsPerPage)
+  // console.log((currentPage - 1) * settings.maxItemsPerPage)
+  // console.log(  currentPage * settings.maxItemsPerPage)
 // useEffect(()=>{
 
   // },
@@ -143,7 +169,7 @@ const login= useContext(LoginContext)
         //  currentPage={currentPage}
          setCurrentPage={setCurrentPage}
          itemsPerPage={settings.maxItemsPerPage}
-         total={filteredList.length}
+         total={filteredList.length/settings.maxItemsPerPage+2}
          />
          </When>
         
