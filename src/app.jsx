@@ -9,6 +9,7 @@ import  NavBar  from './components/navbar/Navbar';
 import LoginProvider from './components/auth/context';
 import Auth from './components/auth/auth';
 import Login from './components/auth/login';
+import SignUp from './components/auth/signup';
 // import {When} from 'react-if';
 import {LoginContext} from './components/auth/context.jsx'
 
@@ -22,13 +23,8 @@ export default class App extends React.Component {
         <Settings>
           <LoginProvider>
             <NavBar/>
-
-          {/* <LoginContext.Consumer>
-                {(contextValue) => {
-                  
-           
-                  return (
-                    <When condition={contextValue.loggedIn}> */}
+            <SignUp/>
+        
 
                     <Routes>
                       <Route  path='/' element={<ToDo />} />

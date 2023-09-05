@@ -71,13 +71,13 @@ useEffect(()=>{
       const url= `https://auth-api-33k1.onrender.com/api/v1/todo/${id}`  
       axios.put(url,item).then((res)=>{
         //either:
-        const dataArray = Object.values(res.data);
-        console.log(dataArray)
-        const newList = [...list, ...dataArray];
-        console.log(newList)
-        setList(newList);
+        // const dataArray = Object.values(res.data);
+        // console.log(dataArray)
+        // const newList = [...list, ...dataArray];
+        // console.log(newList)
+        // setList(newList);
         //or:
-        // setList([res.data])
+        setList([res.data])
       })
         
       }

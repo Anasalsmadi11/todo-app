@@ -30,9 +30,164 @@ const testUsers = {
   },
 };
 
-const LoginProvider = (props) => {
+// const LoginProvider = (props) => {
   
-    let  addItem= async(item)=>{
+//     let  addItem= async(item)=>{
+//     try{
+
+//     const obj = {
+//       item: item.text,
+//       assignedTo: item.assignee,
+//       difficulty:item.difficulty,
+//       complete: item.complete,
+//     };
+//     const url=(`https://auth-api-33k1.onrender.com/api/v1/todo`)
+//     await axios.post(url,obj)
+//     // await axios.get(url)
+//     .then((response)=>{
+//       console.log(response.data)
+//     })
+
+//   }catch(error){
+
+//     console.log(error `add  post ${error}`);
+//   }
+//   }
+
+//   const can = (capability) => {
+//     // return state.user.capabilities.includes(capability);
+//     return state?.user?.capabilities?.includes(capability);
+//   };
+
+//   const login = async (username, password) => { 
+//     try {
+//       // console.log(state.user)
+//       // console.log(user.token)
+//       console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
+//       const response = await superagent 
+//       .post("https://auth-api-33k1.onrender.com/signin") 
+//       .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
+//       console.log("body>>>>>", response.body) 
+     
+//         validateToken(response.body); 
+//     } catch (err) {
+//         console.log('///////')
+//     }
+// }
+
+//   // const login = async (username, password) => {
+
+//   //   await axios.post(`https://auth-api-33k1.onrender.com/signin`)
+  
+//   //   if (auth && auth.password === password) {
+//   //     try {
+//   //       validateToken(auth.token);
+//   //     } catch (e) {
+//   //       setLoginState(false, null, {}, e);
+//   //       console.error(e);
+//   //     }
+//   //   }
+//   // };
+
+//   const logout = () => {
+//     setLoginState(false, null, {});
+//   };
+
+
+//   const validateToken = (user) => {
+//     try {
+//       const validUser = jwt_decode(user.token);
+//       setLoginState(true, user.token, validUser);
+
+//       cookie.save("capabilities",user.user.capabilities)
+      
+//     } catch (e) {
+//       setLoginState(false, null, {}, e);
+//       console.log('Token Validation Error', e);
+//     }
+//   };
+
+//   const setLoginState = (loggedIn, token, user, error) => {
+//     cookie.save('auth', token);
+//     setState({ ...state, loggedIn, user, error: error || null });
+//   };
+
+
+
+//   useEffect(() => {
+//     const qs = new URLSearchParams(window.location.search);
+//     const cookieToken = cookie.load('auth');
+//     const token = qs.get('token') || cookieToken || null;
+//     validateToken(token);
+//   }, []);
+
+
+//   const [state, setState] = useState({
+//     loggedIn: false,
+//     user: { capabilities: [] },
+//     error: null,
+//     addItem:addItem
+//   });
+
+//   return (
+//     <LoginContext.Provider value={{ ...state, can, login, logout }}>
+//       {props.children}
+//     </LoginContext.Provider>
+//   );
+// };
+
+// export default LoginProvider;
+
+
+// +++++++++++++++++++++            ++++++++++++++++++++++
+// +++++++++++++++++++++            ++++++++++++++++++++++
+// +++++++++++++++++++++     or     ++++++++++++++++++++++
+// +++++++++++++++++++++            ++++++++++++++++++++++
+// +++++++++++++++++++++            ++++++++++++++++++++++
+
+ function LoginProvider(props) {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({capabilities: cookie.load('capabilities')} || "");
+  const [error, setError] = useState(null);
+
+
+  let can = (capability) => {
+    return user?.capabilities?.includes(capability);
+  };
+
+  let signup = async (username, password,role) => {
+    const obj={
+      username:username,
+      password:password,
+      role:role,
+    }
+      try {
+        const url = `https://auth-api-33k1.onrender.com/signup`;
+        const res=await axios.post(url,obj)
+        console.log(res.data)
+      } catch (e) {
+        setLoginState(false, null, {}, e);
+        console.error(e);
+      }
+  };
+
+  const login = async (username, password) => { 
+    try {
+      // console.log(state.user)
+      // console.log(user.token)
+      console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
+      const response = await superagent 
+      .post("https://auth-api-33k1.onrender.com/signin") 
+      .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
+      console.log("body>>>>>", response.body) 
+   
+        validateToken(response.body); 
+    } catch (err) {
+        console.log('///////')
+    }
+}
+
+      let  addItem= async(item)=>{
     try{
 
     const obj = {
@@ -54,45 +209,11 @@ const LoginProvider = (props) => {
   }
   }
 
-  const can = (capability) => {
-    // return state.user.capabilities.includes(capability);
-    return state?.user?.capabilities?.includes(capability);
-  };
-
-  const login = async (username, password) => { 
-    try {
-      // console.log(state.user)
-      // console.log(user.token)
-      console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
-      const response = await superagent 
-      .post("https://auth-api-33k1.onrender.com/signin") 
-      .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
-      console.log("body>>>>>", response.body) 
-     
-        validateToken(response.body); 
-    } catch (err) {
-        console.log('///////')
-    }
-}
-
-  // const login = async (username, password) => {
-
-  //   await axios.post(`https://auth-api-33k1.onrender.com/signin`)
-  
-  //   if (auth && auth.password === password) {
-  //     try {
-  //       validateToken(auth.token);
-  //     } catch (e) {
-  //       setLoginState(false, null, {}, e);
-  //       console.error(e);
-  //     }
-  //   }
-  // };
-
-  const logout = () => {
+  let logout = () => {
     setLoginState(false, null, {});
+    cookie.remove("token")
+    // cookie.remove("ca")
   };
-
 
   const validateToken = (user) => {
     try {
@@ -100,126 +221,54 @@ const LoginProvider = (props) => {
       setLoginState(true, user.token, validUser);
 
       cookie.save("capabilities",user.user.capabilities)
-      
+      setUser(user.user)
+
     } catch (e) {
       setLoginState(false, null, {}, e);
       console.log('Token Validation Error', e);
     }
   };
 
-  const setLoginState = (loggedIn, token, user, error) => {
-    cookie.save('auth', token);
-    setState({ ...state, loggedIn, user, error: error || null });
+  let setLoginState = (loggedIn, token, user, error) => {
+    cookie.save("token", token);
+    setLoggedIn(loggedIn);
+    // setToken(token);
+    setUser(user);
+    setError(error || null);
   };
 
-
-
   useEffect(() => {
-    const qs = new URLSearchParams(window.location.search);
-    const cookieToken = cookie.load('auth');
-    const token = qs.get('token') || cookieToken || null;
-    validateToken(token);
+    // const qs = new URLSearchParams(window.location.search);
+    // const cookieToken = cookie.load("auth");
+    // const token = qs.get("token") || cookieToken || null;
+    // validateToken(token);
+    const token= cookie.load("token")
+    if(token){
+      setLoggedIn(true)
+    }else{
+      setLoggedIn(false)
+    }
   }, []);
 
-
-  const [state, setState] = useState({
-    loggedIn: false,
-    user: { capabilities: [] },
-    error: null,
-    addItem:addItem
-  });
+  let state = {
+    loggedIn: loggedIn,
+    can: can,
+    login: login,
+    logout: logout,
+    user: user,
+    error: error,
+    addItem:addItem,
+    signup:signup
+  };
 
   return (
-    <LoginContext.Provider value={{ ...state, can, login, logout }}>
+    <LoginContext.Provider value={state}>
       {props.children}
     </LoginContext.Provider>
   );
-};
+}
 
 export default LoginProvider;
-
-
-// +++++++++++++++++++++            ++++++++++++++++++++++
-// +++++++++++++++++++++            ++++++++++++++++++++++
-// +++++++++++++++++++++     or     ++++++++++++++++++++++
-// +++++++++++++++++++++            ++++++++++++++++++++++
-// +++++++++++++++++++++            ++++++++++++++++++++++
-
-//  function LoginProvider(props) {
-//   const [loggedIn, setLoggedIn] = useState(false);
-//   const [user, setUser] = useState({ capabilities: [] });
-//   const [error, setError] = useState(null);
-
-
-//   let can = (capability) => {
-//     return user?.capabilities?.includes(capability);
-//   };
-
-//   const login = async (username, password) => { 
-//     try {
-//       // console.log(state.user)
-//       // console.log(user.token)
-//       console.log(`Basic ${base64.encode(`${username}:${password}`)}`)
-//       const response = await superagent 
-//       .post("https://auth-api-33k1.onrender.com/signin") 
-//       .set('authorization', `Basic ${base64.encode(`${username}:${password}`)}`) 
-//       console.log("body>>>>>", response.body) 
-//       setState({ ...state, loggedIn, , error: error || null })
-//         validateToken(response.body); 
-//     } catch (err) {
-//         console.log('///////')
-//     }
-// }
-
-//   let logout = () => {
-//     setLoginState(false, null, {});
-//   };
-
-//   const validateToken = (user) => {
-//     try {
-//       const validUser = jwt_decode(user.token);
-//       setLoginState(true, user.token, validUser);
-
-//       cookie.save("capabilities",user.user.capabilities)
-      
-//     } catch (e) {
-//       setLoginState(false, null, {}, e);
-//       console.log('Token Validation Error', e);
-//     }
-//   };
-
-//   let setLoginState = (loggedIn, token, user, error) => {
-//     cookie.save("auth", token);
-//     setLoggedIn(loggedIn);
-//     // setToken(token);
-//     setUser(user);
-//     setError(error || null);
-//   };
-
-//   useEffect(() => {
-//     const qs = new URLSearchParams(window.location.search);
-//     const cookieToken = cookie.load("auth");
-//     const token = qs.get("token") || cookieToken || null;
-//     validateToken(token);
-//   }, []);
-
-//   let state = {
-//     loggedIn: loggedIn,
-//     can: can,
-//     login: login,
-//     logout: logout,
-//     user: user,
-//     error: error,
-//   };
-
-//   return (
-//     <LoginContext.Provider value={state}>
-//       {props.children}
-//     </LoginContext.Provider>
-//   );
-// }
-
-// export default LoginProvider;
 
 
 
