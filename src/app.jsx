@@ -10,22 +10,23 @@ import LoginProvider from './components/auth/context';
 import Auth from './components/auth/auth';
 import Login from './components/auth/login';
 // import {When} from 'react-if';
-// import {LoginContext} from './components/auth/context.jsx'
+import {LoginContext} from './components/auth/context.jsx'
 
 export default class App extends React.Component {
 
-  // static contextType = LoginContext;
+  static contextType = LoginContext;
   render() {
     console.log(this.context)
     return (
       <MantineProvider withGlobalStyles withNormalizeCSS>
-      <NavBar/>
         <Settings>
           <LoginProvider>
+            <NavBar/>
 
           {/* <LoginContext.Consumer>
                 {(contextValue) => {
                   
+           
                   return (
                     <When condition={contextValue.loggedIn}> */}
 
@@ -33,10 +34,9 @@ export default class App extends React.Component {
                       <Route  path='/' element={<ToDo />} />
                       <Route  path='/settings' element={<UserSettings />} />
                     </Routes>
-               
-                      <Login />
+                      {/* <Login /> */}
               
-                      <Auth>
+                      {/* <Auth>
                         <div>Any valid user can see this</div>
                       </Auth>
               
@@ -50,7 +50,7 @@ export default class App extends React.Component {
               
                       <Auth capability="delete">
                         <div>Users with delete access can see this</div>
-                      </Auth>
+                      </Auth> */}
                       
                      {/* </When>
                   );

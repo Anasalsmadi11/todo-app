@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { Pagination } from '@mantine/core';
-import { SettingContext } from "../../context/Settings/settings";
+
 
 
 export default function PaginationSettings(props){
-  const settings= useContext(SettingContext)
-  // console.log(props.itemsPerPage)
+
     return(
         <>
          <Pagination
